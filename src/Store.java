@@ -18,8 +18,8 @@ public class Store {
         do {
             System.out.println("which user you want create:(1.employees  \n2.customer");
             userType = scanner.nextInt();
-            createAccount(userType);
-        }while (userType<0 ||userType>2);
+        }while (userType!=1 && userType!=2);
+        createAccount(userType);
 
     }
     public void createAccount(int userType){
