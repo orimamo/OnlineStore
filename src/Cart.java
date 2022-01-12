@@ -1,15 +1,15 @@
 public class Cart {
-    private Object user;
+    private User user;
     private Product [] products;
     private int [] amount;
     private double cost;
 
-    public Cart(Object user) {
+    public Cart(User user) {
         this.user = user;
         this.products = new Product[0];
         this.cost = 0;
     }
-    public Object getUser() {
+    public User getUser() {
         return user;
     }
 
@@ -21,7 +21,7 @@ public class Cart {
         return cost;
     }
 
-    public void setUser(Object user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -40,6 +40,7 @@ public class Cart {
         }
         products1[this.products.length]=product;
         this.products=products1;
+
     }
     public void addAmount(int amount){
         int[] amount1=new int[this.amount.length+1];
@@ -49,11 +50,31 @@ public class Cart {
         amount1[this.amount.length]=amount;
         this.amount=amount1;
     }
-    public double costOfCart(){
+    public double costOfCart(User user){
     double cost=0;
-    for (int i=0;i<this.products.length;i++){
-        cost=cost+(this.products[i].getPrice()*this.amount[i])*(this.products[i].getDiscount()/100);
+    if (user instanceof Customer) {
+        for (int i = 0; i < this.products.length; i++) {
+            if (((Customer) user).isVip()) {
+                cost = cost + (this.products[i].getPrice() * this.amount[i])*(this.products[i].getDiscount()/100);
+            }
+            else {
+                cost = cost + (this.products[i].getPrice() * this.amount[i]);
+            }
+        }
+    }
+    else {
+        for (int i = 0; i < this.products.length; i++) {
+            if (((Employee) user).getRank().equals("regular_user")){
+                
+            }
+
+        }
     }
     return cost;
+    }
+    public void printCart(){
+        for (int i=0;i<this.products.length;i++){
+            System.out.println((i+1) + "." + this.products[i] + this.amount[i]);
+        }
     }
 }
