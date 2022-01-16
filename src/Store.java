@@ -1,117 +1,124 @@
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Scanner;
 
 public class Store {
     private Employee[] employees;
     private Customer[] customers;
     private Product[] products;
+    public Scanner scanner=new Scanner(System.in);
 
     public Store() {
         this.employees = new Employee[0];
         this.customers = new Customer[0];
         this.products = new Product[0];
     }
+    public final String ENTER_YOUR = "Enter your ";
+    public final String EMPLOYEE = "employee";
+    public final String CUSTOMER = "customer";
+    public final int EMPLOYEES=1;
 
-    public void createUser() {
-        Scanner scanner = new Scanner(System.in);
+    public void createUser(){
+        Scanner scanner=new Scanner(System.in);
         int userType;
         do {
-            System.out.println("which user you want create:(1.employees  \n2.customer");
-            userType = scanner.nextInt();
-        } while (userType != 1 && userType != 2);
-        createAccount(userType);
+            userType = whichUserType();
+            createAccount(userType);
+        }while (userType<0 ||userType>2);
 
     }
-
-    public void createAccount(int userType) {
-        final int EMPLOYEES = 1;
+    public String firstName(){
         String firstName;
+        do {
+            System.out.println(ENTER_YOUR+"firstName:");
+        }while (!onlyLetters(firstName=scanner.next()));
+        return firstName;
+    }
+    public String lastName(){
         String lastName;
+        do {
+            System.out.println(ENTER_YOUR+"lastName:");
+
+        }while (!onlyLetters(lastName=scanner.next()));
+        return lastName;
+    }
+    public void userName(){
+        System.out.println(ENTER_YOUR+"userName:");
+    }
+    public void password(){
+        System.out.println(ENTER_YOUR+"password:");
+    }
+    public void createAccount(int userType){
+        String firstName = firstName();
+        String lastName = lastName();
         String userName;
+        do {
+            userName();
+        }while (isUsernameExist(userName=scanner.next(),userType));
         String password;
-        Scanner scanner = new Scanner(System.in);
         do {
-            System.out.println("enter your firstName:");
-        } while (!onlyLetters(firstName = scanner.next()));
-        do {
-            System.out.println("enter your lastName:");
-
-        } while (!onlyLetters(lastName = scanner.next()));
-        do {
-            System.out.println("enter your userName:");
-
-        } while (isUsernameExist(userName = scanner.next(), userType));
-        do {
-            System.out.println("enter your password:");
-
-        } while (!passwordIsProper(password = scanner.next()));
-        if (userType == EMPLOYEES) {
-            String rank = employeesRank();
-            Employee employee = new Employee(firstName, lastName, userName, password, rank);
+            password();
+        }while (!passwordIsProper(password=scanner.next()));
+        if(userType==EMPLOYEES){
+            int rank=employeesRank();
+            Employee employee=new Employee(firstName,lastName,userName,password,rank);
             addEmployeesToArray(employee);
-        } else {
-            String result = vip();
+        }
+        else {
+            String result=vip();
             boolean vip;
-            if (result == "yes") {
-                vip = true;
-            } else {
-                vip = false;
+            if(result=="yes"){
+                vip=true;
             }
-            Customer customer = new Customer(firstName, lastName, userName, password, vip);
+            else {
+                vip=false;
+            }
+            Customer customer=new Customer(firstName,lastName,userName,password,vip);
             addCustomerToArray(customer);
         }
-
     }
-
-    public String employeesRank() {
-        final int REGULAR_USER = 1;
-        final int MANAGER = 2;
-        Scanner scanner = new Scanner(System.in);
-        String rank;
-        int choise;
-        System.out.println("what your rank?:(1-regular_user \n2.manager \n3.Management_team ");
-        choise = scanner.nextInt();
-        if (choise == REGULAR_USER) {
-            rank = "regular_user";
-        } else if (choise == MANAGER) {
-            rank = "manager";
-        } else {
-            rank = "Management_team";
-        }
+    public  int employeesRank(){
+        Scanner scanner=new Scanner(System.in);
+        int rank;
+        do {
+            System.out.println("What your rank?:\n1-regular user \n2.manager \n3.Management_team ");
+            rank= scanner.nextInt();
+        }while (rank>0 && rank<4);
         return rank;
     }
-
-    public String vip() {
-        Scanner scanner = new Scanner(System.in);
+    public  String vip(){
+        Scanner scanner=new Scanner(System.in);
         String vipMember;
         do {
-            System.out.println("do you want to be member in vip?:(1.yes\n2.no)");
-            vipMember = scanner.next();
-        } while (vipMember != "yes" || vipMember != "no");
+            System.out.println("Do you want to be member in vip?:(1.yes\n2.no)");
+            vipMember=scanner.next();
+        }while (vipMember!="yes" || vipMember!="no");
         return vipMember;
     }
 
-    public boolean onlyLetters(String str) {
-        boolean check = false;
-        for (int i = 0; i < str.length(); i++) {
-            char c1 = str.charAt(i);
-            if (Character.isLetter(c1)) {
-                check = true;
-            } else {
-                check = false;
+    public  boolean onlyLetters(String str){
+        boolean check=false;
+        for (int i=0;i<str.length();i++){
+            char c1=str.charAt(i);
+            if (Character.isLetter(c1)){
+                check=true;
+            }
+            else {
+                check=false;
                 break;
             }
         }
         return check;
     }
 
-    public boolean isUsernameExist(String userName, int userType) {
-        boolean notExists = false;
-        if (userType == 1) {
-            if (this.employees.length == 0) {
-                notExists = false;
-            } else {
+    public  boolean isUsernameExist(String userName,int userType){
+        boolean notExists=false;
+        if(userType==1) {
+            if (this.employees.length==0){
+                notExists=false;
+            }
+            else {
                 for (int i = 0; i < this.employees.length; i++) {
                     if (this.employees[i].getUserName().equals(userName)) {
                         notExists = true;
@@ -119,10 +126,12 @@ public class Store {
                     }
                 }
             }
-        } else {
-            if (this.customers.length == 0) {
-                notExists = false;
-            } else {
+        }
+        else {
+            if (this.customers.length==0){
+                notExists=false;
+            }
+            else {
                 for (int i = 0; i < this.customers.length; i++) {
                     if (this.customers[i].getUserName().equals(userName)) {
                         notExists = false;
@@ -133,16 +142,19 @@ public class Store {
         }
         return notExists;
     }
-
-    public boolean passwordIsProper(String password) {
-        boolean passwordCheck = false;
-        if (password.length() >= 6) {
-            passwordCheck = true;
+    public int whichUserType(){
+        System.out.println("Which user you are? \n1."+EMPLOYEE+"  \n2."+CUSTOMER);
+        int userType=scanner.nextInt();
+        return userType;
+    }
+    public  boolean passwordIsProper(String password){
+        boolean passwordCheck=false;
+        if (password.length()>=6){
+            passwordCheck=true;
         }
         return passwordCheck;
     }
-
-    public void addEmployeesToArray(Employee employee) {
+    public  void addEmployeesToArray(Employee employee){
         Employee[] newArray = new Employee[this.employees.length + 1];
         for (int i = 0; i < this.employees.length; i++) {
             newArray[i] = this.employees[i];
@@ -151,8 +163,7 @@ public class Store {
         newArray[this.employees.length] = propertyToAdd;
         this.employees = newArray;
     }
-
-    public void addCustomerToArray(Customer customer) {
+    public void addCustomerToArray(Customer customer){
         Customer[] newArray = new Customer[this.customers.length + 1];
         for (int i = 0; i < this.customers.length; i++) {
             newArray[i] = this.customers[i];
@@ -161,50 +172,48 @@ public class Store {
         newArray[this.customers.length] = propertyToAdd;
         this.customers = newArray;
     }
-
-    public Object login() {
+    public User login(){
         Scanner scanner = new Scanner(System.in);
-        Object objects = new Object();
+        User user = null;
         boolean details = false;
         String username = null;
         String password = null;
-        int userType;
-        System.out.println("which user you are?:1.employees  \n2.customer");
-        userType = scanner.nextInt();
-        System.out.println("insert your username:");
-        username = scanner.next();
-        System.out.println("insert your password:");
-        password = scanner.next();
-        if (isUsernameExist(username, userType)) {
-            if (isPasswordCorrect(username, password, userType)) {
-                details = true;
+        int userType = whichUserType();
+        userName();
+        username=scanner.next();
+        password();
+        password=scanner.next();
+        if (isUsernameExist(username,userType)){
+            if (isPasswordCorrect(username,password,userType)){
+                details=true;
             }
         }
-        if (details) {
-            if (userType == 1) {
-                objects = employees[indexOfTheUsername(username, userType)];
-            } else {
-                objects = customers[indexOfTheUsername(username, userType)];
+        if (details){
+            if (userType==1){
+                user=employees[indexOfTheUsername(username,userType)];
             }
-        } else {
-            System.out.println("there isn't user like this");
+            else {
+                user=customers[indexOfTheUsername(username,userType)];
+            }
         }
-        return objects;
-
+        else {
+            System.out.println("There isn't user like this");
+        }
+        return user;
     }
-
-    public boolean isPasswordCorrect(String username, String password, int userType) {
-        boolean passwordCorrect = false;
-        if (userType == 1) {
+    public boolean isPasswordCorrect(String username ,String password,int userType){
+        boolean passwordCorrect=false;
+        if (userType==1) {
             if (isUsernameExist(username, userType)) {
-                int index = indexOfTheUsername(username, userType);
+                int index = indexOfTheUsername(username,userType);
                 if (employees[index].getPassword().equals(password)) {
                     passwordCorrect = true;
                 }
             }
-        } else {
+        }
+        else {
             if (isUsernameExist(username, userType)) {
-                int index = indexOfTheUsername(username, userType);
+                int index = indexOfTheUsername(username,userType);
                 if (customers[index].getPassword().equals(password)) {
                     passwordCorrect = true;
                 }
@@ -212,10 +221,9 @@ public class Store {
         }
         return passwordCorrect;
     }
-
-    public int indexOfTheUsername(String username, int userType) {
-        int index = -1;
-        if (userType == 1) {
+    public int indexOfTheUsername(String username,int userType){
+        int index=-1;
+        if (userType==1) {
             for (int i = 0; i < this.employees.length; i++) {
                 User currentUser = this.employees[i];
                 if (currentUser.getUserName().equals(username)) {
@@ -223,7 +231,8 @@ public class Store {
                     break;
                 }
             }
-        } else {
+        }
+        else {
             for (int i = 0; i < this.customers.length; i++) {
                 User currentUser = this.customers[i];
                 if (currentUser.getUserName().equals(username)) {
@@ -234,31 +243,151 @@ public class Store {
         }
         return index;
     }
+    public void whichProducts(){
+        System.out.println("You must choose the product number you want to buy\n" +
+                "If you want to finish the purchase, press -1");
+    }
+    public void secondMenuCustomer(){
+        int productNumber=0;
+        while (productNumber==-1);{
+            int num = 1;
+            if (products.length==0) {
+                System.out.println("There are no products in the store.");
+            }else {
+                for (int i = 0; i < products.length; i++) {
+                    System.out.println(num + i + ")");
+                    products[i].getDescription();
+                }
+            }
+            whichProducts();
+            productNumber = scanner.nextInt();
+            System.out.println("How many items do you want from this product");
+        }
+    }
+    public void secondMenuEmployee(){
+        customerList();
+        vipCustomerList();
 
-    public void secondMenu(User user) {
+    }
+    public void customerList(){
+        int num = 1;
+        if (customers.length==0) {
+            System.out.println("There are no costomers in the store.");
+        }else {
+            for (int i = 0; i < customers.length; i++) {
+                System.out.println(num + i + ")");
+                customers[i].toString();
+            }
+        }
+    }
 
+    public void vipCustomerList(){
+        int num = 1;
+        for (int i = 0; i < customers.length; i++) {
+            if (customers[i].isVip()) {
+                System.out.println(num + i + ")");
+                customers[i].toString();
+            }
+        }
+        if (num==1){
+            System.out.println("There are no vip costomers in the store.");
+        }
 
+    }
+    public void secondMenu(int userType){
+        if (userType==EMPLOYEES){
+            secondMenuEmployee();
+        }else {
+            secondMenuCustomer();
+        }
+
+    }
+    public void purchasedCustomer(){
+        for (int i = 0; i < customers.length; i++) {
+            if (customers[i].getCart() != null){
+                if (customers[i].getCart().getProducts().length!=0){
+                    customers[i].toString();
+                }
+            }
+        }
+    }
+    public void highestPurchases(){
+        int indexHighestPurchase=0;
+
+        for (int i = 1; i < customers.length; i++) {
+            if (customers[i].getCart() != null && customers[indexHighestPurchase].getCart() != null && customers[i].getCart().costOfCart(customers[i]) > customers[indexHighestPurchase].getCart().costOfCart(customers[indexHighestPurchase])){
+                indexHighestPurchase=i+1;
+            }
+        }
+        System.out.println("The customer who made the most purchases: ");
+        customers[indexHighestPurchase].toString();
+    }
+
+    public void addProductToStore(){
+        Scanner scanner=new Scanner(System.in);
+        Product[] products1 = new Product[this.products.length+1];
+        for (int i=0;i<this.products.length;i++){
+            products1[i]=this.products[i];
+        }
+        String description;
+        double price;
+        int discount;
+        System.out.println("enter the description:");
+        description=scanner.next();
+        System.out.println("enter the price:");
+        price=scanner.nextDouble();
+        System.out.println("enter the discount:");
+        discount=scanner.nextInt();
+        products1[this.products.length]=new Product(description,price,discount);
+        this.products=products1;
+    }
+    public void UpdateInventory(){
+        Scanner scanner=new Scanner(System.in);
+        String available;
+        int choose;
+        for (int i=0;i<this.products.length;i++){
+            System.out.println((i+1) + "." + this.products[i]);
+        }
+        do {
+            System.out.println("enter the product to update:");
+            choose = scanner.nextInt();
+        }while (choose-1>this.products.length && choose-1<this.products.length);
+        do {
+            System.out.println("this product is available?:(yes or no)");
+            available=scanner.next();
+            if (available=="yes"){
+                this.products[choose-1].setAtTheInventory(true);
+            }
+            else {
+                this.products[choose-1].setAtTheInventory(false);
+            }
+        }while (available!="yes" && available!="no");
     }
 
     public void purchase(User user) {
+        Calendar calendar = GregorianCalendar.getInstance();
+        Date nowDate = calendar.getTime();
         Scanner scanner = new Scanner(System.in);
         int choose;
         int amount;
-        Cart cart = new Cart(user);
         do {
             for (int i = 0; i < this.products.length; i++) {
-                System.out.print((i + 1) + "." + this.products[i] + ",");
+                if (this.products[i].isAtTheInventory()) {
+                    System.out.print((i + 1) + "." + this.products[i] + ",");
+                }
             }
             System.out.println("choose the number of the product you want to add to cart or -1 to finish");
             choose = scanner.nextInt();
             if ((choose - 1) < this.products.length && choose != -1) {
-                cart.addProductToCart(this.products[choose - 1]);
+                user.getCart().addProductToCart(this.products[choose - 1]);
                 System.out.println("how much you want:");
                 amount = scanner.nextInt();
-                cart.addAmount(amount);
-                cart.printCart();
-                System.out.println(cart.getCost());
+                user.getCart().addAmount(amount);
+                user.getCart().printCart();
+                System.out.println(user.getCart().getCost());
             }
         } while (choose != -1);
+        user.setCounter();
+        user.setDate(nowDate);
     }
 }

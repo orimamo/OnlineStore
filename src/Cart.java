@@ -1,17 +1,14 @@
 public class Cart {
-    private User user;
+
     private Product [] products;
     private int [] amount;
     private double cost;
 
-    public Cart(User user) {
-        this.user = user;
+    public Cart() {
         this.products = new Product[0];
         this.cost = 0;
     }
-    public User getUser() {
-        return user;
-    }
+
 
     public Product[] getProducts() {
         return products;
@@ -21,9 +18,6 @@ public class Cart {
         return cost;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public void setProducts(Product[] products) {
         this.products = products;
@@ -40,7 +34,6 @@ public class Cart {
         }
         products1[this.products.length]=product;
         this.products=products1;
-
     }
     public void addAmount(int amount){
         int[] amount1=new int[this.amount.length+1];
@@ -51,26 +44,21 @@ public class Cart {
         this.amount=amount1;
     }
     public double costOfCart(User user){
-    double cost=0;
-    if (user instanceof Customer) {
-        for (int i = 0; i < this.products.length; i++) {
-            if (((Customer) user).isVip()) {
-                cost = cost + (this.products[i].getPrice() * this.amount[i])*(this.products[i].getDiscount()/100);
-            }
-            else {
-                cost = cost + (this.products[i].getPrice() * this.amount[i]);
+        double cost=0;
+        if (user instanceof Customer) {
+            for (int i = 0; i < this.products.length; i++) {
+                if (((Customer) user).isVip()) {
+                    cost = cost + (this.products[i].getPrice() * this.amount[i])*(this.products[i].getDiscount()/100);
+                }
+                else {
+                    cost = cost + (this.products[i].getPrice() * this.amount[i]);
+                }
             }
         }
-    }
-    else {
-        for (int i = 0; i < this.products.length; i++) {
-            if (((Employee) user).getRank().equals("regular_user")){
-                
-            }
-
+        if (user instanceof Employee){
+            cost= ((Employee) user).discount(cost);
         }
-    }
-    return cost;
+        return cost;
     }
     public void printCart(){
         for (int i=0;i<this.products.length;i++){

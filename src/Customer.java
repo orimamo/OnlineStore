@@ -1,27 +1,25 @@
 public class Customer extends User {
-        private boolean vip;
+    private boolean vip;
 
-
-    public Customer(String firstName, String lastName, String userName, String password,boolean vip){
+    public Customer(String firstName, String lastName, String userName, String password, boolean vip){
         super(firstName,lastName,userName,password);
         this.vip=vip;
     }
 
     @Override
     public String toString() {
+        String str = "!";
         if(vip) {
-            return super.toString() + " " + "vip!";
+            str =" vip"+str ;
         }
-        else {
-            return super.toString() + "!";
-        }
+        return super.toString() + str;
     }
-
     public boolean isVip() {
         return vip;
     }
-
     public void setVip(boolean vip) {
         this.vip = vip;
     }
+
+
 }
