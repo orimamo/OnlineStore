@@ -5,10 +5,11 @@ public class Main {
 
     public static void main(String[] args) {
         firstMenu();
+
     }
 
 
-    public static void firstMenu () {
+    public static void firstMenu(){
         final int createAccount = 1;
         final int logIn = 2;
         final int endPlan = 3;
@@ -29,12 +30,12 @@ public class Main {
                 firstMenu();
                 break;
             case logIn:
-                Object user= store.login();
+                User user= store.login();
                 System.out.println(user);
-                //Store.secondMenu(user);
+                store.secondMenu(user);
                 break;
             case endPlan:
-                System.out.println("goodbye");
+                System.out.println("Goodbye");
                 break;
         }
 

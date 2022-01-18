@@ -46,5 +46,4 @@ public class Product {
     public void setAtTheInventory(boolean atTheInventory) {
         this.atTheInventory = atTheInventory;
     }
-
 }
